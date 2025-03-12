@@ -1,39 +1,30 @@
 {
-    "database": {
-      "default": {
+    "server": {
+        "root_name": "root",
+        "root_password": "123456",     
         "host": "localhost",
         "port": 3306
+      },
+      "database": {
+        "name": "Banking"
       },
       "users": {
         "People": {
           "username": "People",
-          "password": "People@Bank",
-          "database": "Banking",
-          "host":"localhost",
-          "autocommit": true
+          "password": "People@Bank"
         },
         "Staff": {
           "username": "Staff",
-          "password": "Staff@Bank",
-          "database": "Banking",
-          "host":"localhost",
-          "autocommit": true
+          "password": "Staff@Bank"
         },
         "Account": {
           "username": "Account",
-          "password": "Account@Bank",
-          "database": "Banking",
-          "host": "localhost",
-          "autocommit": true
+          "password": "Account@Bank"
         },
         "User": {
           "username": "User",
-          "password": "User@Bank",
-          "database": "Banking",
-          "host": "localhost",
-          "autocommit": true
+          "password": "User@Bank"
         }
       }
-    }
-  }
+}
   

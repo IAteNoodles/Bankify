@@ -2,7 +2,7 @@
 
 ## 1. Foundation/Architecture
 
-- [ ] Design database schema
+- [x] Design database schema
 - [ ] Make it reproducible
 - [ ] Make a Docker container
 - [ ] Make the people framework accessible
