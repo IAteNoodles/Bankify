@@ -68,7 +68,6 @@ class User:
             return False
         
         #Checks if the account and password are correct.
-        
         self.current_account = Account(account, password) 
         if self.current_account.connection:
             return True    

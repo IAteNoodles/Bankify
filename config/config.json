@@ -1,0 +1,39 @@
+{
+    "database": {
+      "default": {
+        "host": "localhost",
+        "port": 3306
+      },
+      "users": {
+        "People": {
+          "username": "People",
+          "password": "People@Bank",
+          "database": "Banking",
+          "host":"localhost",
+          "autocommit": true
+        },
+        "Staff": {
+          "username": "Staff",
+          "password": "Staff@Bank",
+          "database": "Banking",
+          "host":"localhost",
+          "autocommit": true
+        },
+        "Account": {
+          "username": "Account",
+          "password": "Account@Bank",
+          "database": "Banking",
+          "host": "localhost",
+          "autocommit": true
+        },
+        "User": {
+          "username": "User",
+          "password": "User@Bank",
+          "database": "Banking",
+          "host": "localhost",
+          "autocommit": true
+        }
+      }
+    }
+  }
+  
