@@ -1,7 +1,7 @@
 {
     "server": {
-        "root_name": "root",
-        "root_password": "123456",     
+        "root_name": "Noodles",
+        "root_password": "123",     
         "host": "localhost",
         "port": 3306
       },
@@ -10,21 +10,24 @@
       },
       "users": {
         "People": {
-          "username": "People",
+          "username": "PeopleTest",
           "password": "People@Bank"
         },
         "Staff": {
-          "username": "Staff",
+          "username": "StaffTest",
           "password": "Staff@Bank"
         },
         "Account": {
-          "username": "Account",
+          "username": "AccountTest",
           "password": "Account@Bank"
         },
         "User": {
-          "username": "User",
+          "username": "UserTest",
           "password": "User@Bank"
-        }
+        },
+        "Audit": {
+          "username": "AuditTest",
+          "password": "Audit@Bank"
       }
 }
   

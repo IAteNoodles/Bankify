@@ -15,6 +15,7 @@
 - [ ] Create user dashboard
 - [ ] Generate transaction logs
 - [ ] Generate account logs
+- [ ] Generate audit logs
 
 ## 3. Security & Authentication
 
