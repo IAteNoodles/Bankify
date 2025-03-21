@@ -99,6 +99,45 @@ class Account:
         #Update the sender's balance.
         self.get_balance()
         return True
+
+    def get_card_list(self, includeExpired=False, **kwargs):
+        """
+        Retrieves all cards associated with the account.
+        
+        Args:
+            includeExpired(bool): Whether to include expired cards.
+            **kwargs: The search parameters.
+            
+        Returns:
+            list: A list of cards.
+        """
+        query = "SELECT * FROM Cards WHERE Account = '%s'" % self.account_id
+        if not includeExpired:
+            query += " AND Expiry > NOW()"
+        for key, value in kwargs.items():
+            query += " AND " + key + " = " + value
+        connection.execute(query)
+        return connection.fetchall()
+    
+    def request_card(self, cardType, **kwargs):
+        """
+        Requests a new card.
+        
+        Args:
+            cardType(str): The type of card.
+            **kwargs: The card details.
+            
+        Returns:
+            None
+        """
+        query = "INSERT INTO Cards (Account, Type, "
+        values = "'%s', '%s', " % (self.account_id, cardType)
+        for key, value in kwargs.items():
+            query += key + ", "
+            values += value + ", "
+        query = query[:-2] + ") VALUES (" + values[:-2] + ")"
+        connection.execute(query)
+        connector.commit()
 #---------------------------------------------------------------- END OF CLASS -----------------------------------------------------------------#
         
         
