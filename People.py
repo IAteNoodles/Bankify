@@ -2,7 +2,7 @@
 #First column is a 32 character ID, which is generated automatically using randombits
 #Second column is the name
 #Third column is the public key to the generated RSA key pair. This private key is not stored in the database, but is returned to the user. 
-import os
+
 from random import randbytes
 import mariadb
 

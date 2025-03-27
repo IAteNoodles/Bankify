@@ -1,5 +1,5 @@
 # A Script that would set up the environment for the project
-config_file = r'''config\config.json'''
+config_file = r'''Bankify\config\config.json'''
 
 # Parse the config file and get the database configuration
 import json

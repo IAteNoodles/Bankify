@@ -11,3 +11,5 @@ Include/
 .qodo/
 .vscode/
 .qodo
+*.pem
+.__KEY__/
