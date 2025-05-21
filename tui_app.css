@@ -1,0 +1,77 @@
+Screen {
+    align: center middle;
+    background: $panel-darken-1; /* Darker background for the whole screen */
+}
+
+.screen-container {
+    width: auto;
+    height: auto;
+    padding: 2 4;
+    border: round $primary-background-lighten-2;
+    background: $primary-background;
+}
+
+.form-container {
+    width: 50; /* Fixed width for forms */
+    height: auto;
+    padding: 2;
+    border: round $secondary-background-lighten-2;
+    background: $secondary-background;
+}
+
+.portal-container {
+    width: 70; /* Wider for portal information */
+    height: auto;
+    padding: 2;
+    border: round $primary-background-lighten-1;
+    background: $primary-background-darken-1;
+}
+
+#welcome-label {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 1;
+    text-style: bold;
+    color: $text;
+}
+
+Button {
+    width: 100%;
+    margin: 1 0;
+}
+
+Input {
+    width: 100%;
+    margin-bottom: 1;
+}
+
+Label {
+    margin-top: 1;
+    color: $text-muted; /* Softer color for labels */
+}
+
+.status-message {
+    margin-top: 1;
+    width: 100%;
+    text-align: center;
+    height: auto; /* Allow multiple lines */
+}
+
+.placeholder-text {
+    margin: 1 0;
+    padding: 1;
+    width: 100%;
+    text-align: center;
+    background: $panel-lighten-1;
+    color: $text-muted;
+}
+
+/* Specific portal labels */
+UserPortalScreen .portal-container > Label:first-child,
+StaffPortalScreen .portal-container > Label:first-child {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 1;
+    text-style: bold underline;
+    color: $text;
+}
