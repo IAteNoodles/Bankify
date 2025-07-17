@@ -15,7 +15,7 @@ Environment Variables:
     DB_NAME: Database name.
 """
 
-import os
+'''import os
 import mariadb
 from dotenv import load_dotenv
 from Crypto.PublicKey import RSA
@@ -142,7 +142,11 @@ class People:
             cursor.execute("DELETE FROM People WHERE `ID` = %s", (self.id,))
             self.connection.commit()
         self.connection.close()
-                   
+
+
+class People:
+    def __init__(self, id, name):
+        self.id                 
 # Example usage
 if __name__ == "__main__":
     """
@@ -164,3 +168,119 @@ if __name__ == "__main__":
 
     # Verify an existing person
     People(connection=connection, ID=new_People.id, name="Noodles")
+
+
+import pyotp'''
+import pyotp
+import mariadb
+import os
+import hashlib
+
+class People:
+    def __init__(self, name, passwd, verification_method, **kwargs):
+
+        self.connection = mariadb.connect(
+        user=os.getenv("DB_USER"),
+        host=os.getenv("DB_HOST"),
+        password=os.getenv("DB_PASSWORD"),
+        database=os.getenv("DB_NAME")
+    )
+        self.name = name
+        self.verification_method = verification_method
+        # Store the provided parameters as instance attributes
+        if kwargs.get("is_new", False):
+            # Setup new user with name and password and generate a new ID
+            # Hash the password with satling the name, dob
+            paaswd: str = paaswd.join(name, kwargs.get("dob"))
+            passwd = hashlib.sha3_512(paaswd.encode()).hexdigest()
+
+            self.id = self.__generate_user__(self.connection, name, passwd)
+
+            # Create additional security attributes
+            if self.verification_method == "2fa":
+                # Generate a new 2FA secret and store it in the database
+                secret = pyotp.random_base32()
+                self.__store_2fa_secret_in_db(self.connection, self.id, secret)
+            elif self.verification_method == "key":
+                pass
+            else:
+                raise ValueError("Invalid verification method.")
+        
+        else:
+            # Use the provided ID
+            self.id = kwargs.get("id")
+            self.key = kwargs.get("key")
+            if self.key and verification_method == "2fa":
+                # Verify the provided key matches with the stored 2fa_key
+                stored_secret = self.get_2fa_secret_from_db(self.connection, self.id)
+                if stored_secret:
+                    totp = pyotp.TOTP(stored_secret)
+                    self.__is_verified_by_2fa = totp.verify(self.key)
+                
+                if not self.__is_verified_by_2fa:
+                    raise ValueError("Invalid 2FA key.")
+                else:
+                    # Hash the password with the name, dob and then check if the hash matches.
+
+                    # Get the dob from the database
+                    self.connection.cursor().execute("SELECT dob FROM People WHERE ID = %s", (self.id,))
+                    dob = self.connection.cursor().fetchone()[0]
+
+                    paaswd: str = paaswd.join(name, dob)
+                    passwd = hashlib.sha3_512(paaswd.encode()).hexdigest()
+
+                    # Check if the hash matches with the stored hash in the database
+                    self.connection.cursor().execute("SELECT passwd FROM People WHERE ID = %s", (self.id,))
+                    stored_hash = self.connection.cursor().fetchone()[0]
+                    if stored_hash != passwd:
+                        raise ValueError("Invalid password.")
+                    
+
+            # Load user data from the database
+        
+        # Initialize verification status
+        self.__is_verified = False
+        
+        # Handle verification based on verification_method
+        if self.verification_method in ["2fa", "key"] and self.key is None:
+            if self.verification_method == "2fa":
+                
+                
+                # Generate a new 2FA secret and store it in the database
+
+                secret = pyotp.random_base32()
+                self.__store_2fa_secret_in_db(self.connection, secret)
+            elif self.verification_method == "key":
+                pass
+        if self.verification_method == "2fa":
+            # Verify the provided key (2FA code) against the stored 2fa_key
+            stored_secret = get_2fa_secret_from_db(self.id)
+            if stored_secret:
+                totp = pyotp.TOTP(stored_secret)
+                if totp.verify(self.key):
+                    self.__is_verified = True
+            # If stored_secret is None or verification fails, __is_verified remains False
+        if self.verification_method == "key":
+            # Leave "key" method unimplemented for now
+            pass
+            # __is_verified remains False
+        # For any other verification_method, __is_verified remains False by default
+
+# Placeholder for database access function (not implemented)
+
+def __generate_user__(connection, name, passwd):
+    # This should generate a new user in the database and return the ID
+    # For now, it's a placeholder
+    connection.cursor().execute("INSERT INTO People (Name, passwd) VALUES (%s, %s)", (name, passwd))
+    connection.commit()
+
+def __store_2fa_secret_in_db(connection, secret):
+    # This should store the 2FA secret for the user in the database
+    # For now, it's a placeholder
+    connection.cursor().execute("INSERT INTO People (2FA_KEY_ID) VALUES (%s) WH", (secret,))
+    connection.commit()
+def get_2fa_secret_from_db(connection, user_id):
+    # This should return the stored 2FA secret for the user from the database
+    # For now, it's a placeholder
+    connection.cursor().execute("SELECT 2FA_KEY_ID FROM People WHERE ID = %s", (user_id,))
+    return connection.cursor().fetchone()
