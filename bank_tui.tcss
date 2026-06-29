@@ -1,0 +1,72 @@
+
+    /* General Styling */
+    Screen {
+        align: center middle;
+        background: $panel-darken-1;
+        overflow: auto; /* Ensure screens can scroll if content exceeds viewport */
+    }
+
+    Header, Footer {
+        background: $primary-background-darken-2;
+        color: $text;
+    }
+
+    /* Containers for Forms and Portals */
+    .main-menu-container, .login-type-container, .login-form-container, 
+    .portal-container, .form-container, .table-container {
+        width: auto;
+        max-width: 70; /* Increased max-width for better readability */
+        padding: 1 2;
+        margin: 1 0;
+        border: tall $primary-background-lighten-1;
+        background: $panel;
+        /* Adding overflow for individual containers if their content is too large */
+        overflow: auto; 
+        height: auto; /* Adjust height based on content */
+        max-height: 90%; /* Prevent individual containers from taking full screen height */
+
+    }
+    ScrollableContainer {
+        background: $surface;
+    }
+
+    /* Text Styling */
+    .welcome-text { text-align: center; margin-bottom: 1; text-style: bold; }
+    .instruction-text, .info-text, .question-text, .options-header, .sub-header { 
+        margin-bottom: 1; 
+        color: $text-muted; /* Softer color for instructions */
+    }
+    .sub-header { text-style: bold; color: $text; }
+    .warning-text { color: $error; text-style: bold; }
+    Label { margin-bottom: 0; margin-top: 1; } /* Compact labels */
+
+    /* Buttons */
+    Button { width: 100%; margin-top:1; } /* Default full-width buttons with some top margin */
+    Button.menu-button, Button.portal-button { margin-bottom: 1; } /* Spacing for list-like buttons */
+    .form-buttons { width: 100%; align-horizontal: right; padding-top: 1; }
+    .form-buttons Button { width: auto; margin-left: 1; } /* Smaller buttons in form footers */
+    .mt-1 {margin-top: 1;}
+    .mt-2 {margin-top: 2;}
+
+    /* Inputs and Selects */
+    Input, OptionList, DataTable, RadioSet { margin-bottom: 1; }
+    Input { border: round $primary; }
+    Input:focus { border: round $secondary; }
+    OptionList, RadioSet { border: round $surface; padding: 1; max-height: 15; }
+
+
+    /* Modal Styling */
+    ModalScreen { align: center middle; background: $primary-background 50%; } /* Semi-transparent */
+    .modal-container {
+        width: auto; max-width: 60; padding: 2; border: wide $accent; background: $panel-darken-2;
+    }
+    .modal-title { text-style: bold; text-align: center; margin-bottom:1; width: 100%;}
+    .modal-message { margin: 1 0; }
+    .prompt-buttons { width: 100%; align-horizontal: center; padding-top: 1; }
+    .prompt-buttons Button { margin: 0 1; }
+
+    /* Markdown View */
+    #markdown_container { padding: 1; background: $surface; border: round $primary-lighten-2; }
+    Markdown { width: 100%; }
+    Pretty { background: $surface; padding: 1; border: round $primary; margin-top:1;}
+    

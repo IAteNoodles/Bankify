@@ -16,6 +16,10 @@ try:
     from People import generate as generate_person # Added import
     import mariadb
     import hashlib # Import for SHA-512
+    import os
+    from dotenv import load_dotenv
+
+    load_dotenv()
 except ImportError as e:
     print(f"Error importing necessary modules: {e}")
     print("Please ensure CheckSQL.py, Users.py, and Staffs.py are in the correct path.")
@@ -25,7 +29,12 @@ except ImportError as e:
 # --- Database Connection (Consider refactoring to a separate module) ---
 def get_db_connection_details():
     # In a real app, these might come from a config file
-    return {"user": "Staff", "passwd": "Staff@Bank", "database": "Banking"}
+    return {
+        "user": os.getenv("DB_USER_STAFF"), 
+        "passwd": os.getenv("DB_PASS_STAFF"), 
+        "database": os.getenv("DB_DATABASE_NAME"),
+        "host": os.getenv("DB_HOST")
+    }
 
 # --- Screens ---
 
@@ -337,7 +346,7 @@ class TransactionScreen(Screen):
                 else:
                     # Construct a more specific error message if possible
                     if self.transaction_type == 0 and not error_message: # Withdrawal
-                         # Check balance if error_message wasn't specific from commit_transaction
+                        # Check balance if error_message wasn't specific from commit_transaction
                         if hasattr(self.app.user_session.current_account, 'balance') and amount > self.app.user_session.current_account.balance:
                             error_message = "Insufficient funds."
                         else:
@@ -638,21 +647,27 @@ class UserBankAccountScreen(Screen):
         status_label = self.query_one("#bank_account_status", Static)
         if self.app.user_session and self.app.user_session.current_account:
             try:
+                # Force a refresh from the database by calling the getter
                 self.current_balance = self.app.user_session.current_account.get_balance()
                 self._update_balance_display()
-                self.app.log.info(f"Balance refreshed for account '{self.current_account_id}': ${self.current_balance:.2f}")
-                status_label.update("[b sky_blue2]Balance refreshed.[/b sky_blue2]")
-            except Exception as e:
-                self.app.log.error(f"Error refreshing balance for account '{self.current_account_id}': {e}")
+                status_label.update("[b green]Balance refreshed.[/b green]")
+                self.app.log.info(f"Balance refreshed for account '{self.current_account_id}'. New balance: {self.current_balance}")
+            except ValueError as e: # Catch if account disappeared or other DB issue from get_balance
                 status_label.update(f"[b red]Error refreshing balance: {e}[/b red]")
+                self.app.log.error(f"Error refreshing balance for '{self.current_account_id}': {e}")
+                # Potentially disable buttons or pop screen if account is no longer valid
+            except Exception as e:
+                status_label.update(f"[b red]Unexpected error refreshing balance: {e}[/b red]")
+                self.app.log.exception(f"Unexpected error refreshing balance for '{self.current_account_id}':")
         else:
             status_label.update("[b red]Cannot refresh balance: No active account session.[/b red]")
+            self.app.log.warning("Refresh balance called with no active account session.")
 
     def compose(self) -> ComposeResult:
         yield Header(name=f"Account: {self.current_account_id}")
         yield Footer()
         with Vertical(classes="portal-container"):
-            yield Static(f"Account ID: {self.current_account_id}", classes="placeholder-text")
+            # Ensure the balance display is part of the layout
             yield Static(f"Current Balance: [b green]${self.current_balance:.2f}[/b green]", id="account_balance_display")
             yield Button("Withdraw Money", id="account_withdraw", variant="primary") 
             yield Button("Deposit Money", id="account_deposit", variant="primary") 
@@ -688,36 +703,31 @@ class UserBankAccountScreen(Screen):
 
         self.app.log.info(f"UserBankAccountScreen: Button '{event.button.id}' pressed for account '{self.current_account_id}'.")
         
-        if not self.app.user_session or (event.button.id != "account_logout" and not self.app.user_session.current_account):
-            if event.button.id != "account_logout": # Logout can proceed to clear session
-                 status_label.update("[b red]Error: No active user or bank account session.[/b red]")
-                 self.app.log.error(f"Action '{event.button.id}' attempted with no active session.")
-                 return
+        # Ensure there is an active user and account session for most operations
+        if event.button.id not in ["account_logout", "account_refresh_balance"] and (not self.app.user_session or not self.app.user_session.current_account):
+            status_label.update("[b red]Error: No active user or account session.[/b red]")
+            self.app.log.warning(f"Button '{event.button.id}' pressed with no active user/account session.")
+            return # Prevent further processing for actions requiring a session
 
         if event.button.id == "account_logout":
             self.action_logout_from_account()
         elif event.button.id == "account_refresh_balance":
             self.refresh_balance()
-            # refresh_balance now updates its own status
         elif event.button.id == "account_withdraw":
             if self.app.user_session and self.app.user_session.current_account:
                 self.app.push_screen(TransactionScreen(transaction_type=0, account_id=self.current_account_id))
             else:
-                status_label.update("[b red]Error: No active bank account session for withdrawal.[/b red]")
-                self.app.log.error("Withdraw attempt with no active bank account session.")
+                status_label.update("[b red]No active account to withdraw from.[/b red]")
         elif event.button.id == "account_deposit":
             if self.app.user_session and self.app.user_session.current_account:
                 self.app.push_screen(TransactionScreen(transaction_type=1, account_id=self.current_account_id))
             else:
-                status_label.update("[b red]Error: No active bank account session for deposit.[/b red]")
-                self.app.log.error("Deposit attempt with no active bank account session.")
+                status_label.update("[b red]No active account to deposit into.[/b red]")
         elif event.button.id == "account_transfer":
             if self.app.user_session and self.app.user_session.current_account:
                 self.app.push_screen(TransferMoneyScreen(account_id=self.current_account_id))
             else:
-                status_label.update("[b red]Error: No active bank account session for transfer.[/b red]")
-                self.app.log.error("Transfer attempt with no active bank account session.")
-        # No 'else' needed as all buttons are handled or covered by session check
+                status_label.update("[b red]No active account to transfer from.[/b red]")
 
 
 class UserPortalScreen(Screen):

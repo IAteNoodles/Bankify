@@ -1,10 +1,22 @@
 import json
 from random import randbytes
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+DB_HOST = os.getenv("DB_HOST")
+DB_USER_ROOT_START = os.getenv("DB_USER_ROOT_START")
+DB_PASS_ROOT_START = os.getenv("DB_PASS_ROOT_START")
+DB_DATABASE_NAME = os.getenv("DB_DATABASE_NAME")
 
 
 def start_server(USERNAME, PASSWORD, DATABASE_NAME):
     import mariadb
-    connector = mariadb.connect(user=USERNAME, password=PASSWORD, database=DATABASE_NAME)
+    # Use the arguments passed to the function, not the global env vars directly here
+    # unless the intention is to always use the .env for this specific function.
+    # For now, keeping original behavior of using function args.
+    connector = mariadb.connect(user=USERNAME, password=PASSWORD, host=DB_HOST, database=DATABASE_NAME)
     connection = connector.cursor()
     print("Connected to %s database" % DATABASE_NAME)
     return connector,connection
@@ -175,8 +187,9 @@ def populate(connector, connection):
 
 
 if __name__ == "__main__":
-    connector, connection = start_server("IAteNoodles","CrazyxNoob@69","Banking")#(input("Username: "), input("Password:"), input("Database: "))
-    make_tables(connector, connection, "Banking")
+    # Use environment variables for the main execution block
+    connector, connection = start_server(DB_USER_ROOT_START, DB_PASS_ROOT_START, DB_DATABASE_NAME)
+    make_tables(connector, connection, DB_DATABASE_NAME) # Pass DB_DATABASE_NAME
     populate(connector, connection)
-    
-    
+
+

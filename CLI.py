@@ -111,8 +111,18 @@ def work_as_staff(staff_id, password):
     #Imports the Staff, Manager and Admin classes.
     from Staffs import Staff, Manager, Admin
     import mariadb
+    import os
+    from dotenv import load_dotenv
+
+    load_dotenv()
+
+    DB_HOST = os.getenv("DB_HOST")
+    DB_USER_STAFF = os.getenv("DB_USER_STAFF")
+    DB_PASS_STAFF = os.getenv("DB_PASS_STAFF")
+    DB_DATABASE_NAME = os.getenv("DB_DATABASE_NAME")
+    
     connector = mariadb.connect(
-    user="Staff", passwd="Staff@Bank", database="Banking")
+    user=DB_USER_STAFF, host=DB_HOST, passwd=DB_PASS_STAFF, database=DB_DATABASE_NAME)
     connection = connector.cursor()
     #Checks the type of the staff and creates a new instance of the appropriate staff class.
     connection.execute("SELECT Type FROM Staff WHERE ID = '%s'" % staff_id)
@@ -236,4 +246,4 @@ if __name__ == '__main__':
             user_id = check("Enter your id: ")
             password = check("Enter your password: ")
             from Users import User
-            work_as_user(user_id, password) 
+            work_as_user(user_id, password)

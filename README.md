@@ -52,11 +52,10 @@ NOTE: These specs are not necessary for the working for the APIs.
 2. Install Mariadb
 3. Install the required modules using requirements.txt
    `python3 -m pip -r requirements.txt`
-4. Clone the repository and cd into it.
-5. Run the `Start.py` script to initialize the database and create dummy tables.
-6. Test the project by running the script `test.py`
-7. Relaunch `Start.py` after running `test.py` as the script will truncate all the existing tables.
-8. Run `python3 CLI.py` in the terminal.
+4. Run the `Start.py` script to initialize the database and create dummy tables.
+5. Test the project by running the script `test.py`
+6. Relaunch `Start.py` after running `test.py` as the script will truncate all the existing tables.
+7. Run `python3 CLI.py` in the terminal.
 
 # Note
 
@@ -67,15 +66,7 @@ I am really grateful to everyone who has contributed in any of the above specifi
 The list of sites I visited during the making will be References.md 
 
 # Made by
-1. Abhijit Kumar Singh (Leader)
-2. Shashikant Yadav
-3. Khushi Yadav
+1. Abhishek Muralidharan (Leader)
+2. Abhishek S
+3. Arun Das
 
-# Dropped repositories
-During the making, I had dropped the project many times, mainly due to lack of support or the code was too complicated to maintain. I couldn't manage them to find them all, but I think it is worth to mention them as they were the building ground of this final project.
-1. Banking: https://github.com/IAteNoodles/Banking
-2. Banking_CL: https://github.com/IAteNoodles/Banking_CL
-3. KV_Tinsukia_CS_Project: https://github.com/IAteNoodles/KV_Tinsukia_CS_Project
-
-# Making of the project.
-Check RANT.md for the entire journey of this project. (Under production)
